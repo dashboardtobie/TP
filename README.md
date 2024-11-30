@@ -104,7 +104,8 @@ DDORA IP 10.2.1.226/24 GW 10.2.1.254
 
 #### b - DHCP Starvation
 [dhcp_starvation.py](dhcp_starvation.py) <br>
-[dhcp_starvation.pcapng](dhcp_starvation.pcapng) <br>
+[dhcp_starvation1.pcapng](dhcp_starvation1.pcapng) <br>
+[dhcp_starvation2.pcapng](dhcp_starvation2.pcapng) <br>
 
 résultats :
 
