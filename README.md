@@ -138,7 +138,11 @@ Can't find dhcp server
 [icmp_file_receiver.py](icmp_file_receiver.py) <br>
 [file_exfiltration.pcapng](file_exfiltration.pcapng) <br>
 
-## 6 - STP
+## 6 - TCP
+[tcp_rst.py](tcp_rst.py) <br>
+[tcp_hijack.py](tcp_hijack.py) <br>
+
+## 7 - STP
 [stp_rb.py](stp_rb.py) <br>
 [stp_rb.pcapng](stp_rb.pcapng) <br>
 
