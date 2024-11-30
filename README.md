@@ -83,12 +83,14 @@ PC6> ping 10.2.1.52
 [ping.py](ping.py) <br>
 [tcp_cap.py](tcp_cap.py) <br>
 [dns_cap.py](dns_cap.py) <br>
-[dns_cap.py](dns_cap.py) <br>
+[dns_lookup.py](dns_lookup.py) <br>
 
 ### 2 - DHCP
 #### a - DHCP Spoofing
 [dhcp_spoof.pcapnp](dhcp_spoof.pcapnp) <br>
+
 Résultats :
+
 Sans le serveur Rocky
 ```bash
 PC3> ip dhcp
@@ -105,6 +107,7 @@ DDORA IP 10.2.1.226/24 GW 10.2.1.254
 [dhcp_starvation.pcapng](dhcp_starvation.pcapng) <br>
 
 résultats :
+
 ```bash
 PC3> ip dhcp
 DDD
@@ -139,6 +142,7 @@ Can't find dhcp server
 [stp_rb.pcapng](stp_rb.pcapng) <br>
 
 Résultats :
+
 ```bash
 IOU2#show spanning-tree
 
