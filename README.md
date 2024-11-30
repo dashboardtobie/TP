@@ -87,7 +87,7 @@ PC6> ping 10.2.1.52
 
 ### 2 - DHCP
 #### a - DHCP Spoofing
-[dhcp_spoof.pcapnp](dhcp_spoof.pcapnp) <br>
+[dhcp_spoof.pcapng](dhcp_spoof.pcapng) <br>
 
 Résultats :
 
