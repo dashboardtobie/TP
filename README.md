@@ -134,7 +134,7 @@ Can't find dhcp server
 [icmp_basic_file.py](icmp_file_reveiver.py) <br>
 [file_exfiltration.pcapng](file_exfiltration.pcapng) <br>
 
-6 - STP
+## 6 - STP
 [stp_rb.py](stp_rb.py) <br>
 [stp_rb.pcapng](stp_rb.pcapng) <br>
 
