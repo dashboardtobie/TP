@@ -94,7 +94,7 @@ Résultats :
 Sans le serveur Rocky
 ```bash
 PC3> ip dhcp
-DORA IP 10.2.1.230/24 GW 10.2.1.254
+DDORA IP 10.2.1.230/24 GW 10.2.1.254
 ```
 Avec Rocky
 ```bash
