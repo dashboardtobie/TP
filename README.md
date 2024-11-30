@@ -132,10 +132,10 @@ Can't find dhcp server
 ## 5 - Exfiltration ICMP
 ### a - basic
 [icmp_basic_exfiltr.py](icmp_basic_exfiltr.py) <br>
-[icmp_basic_reveiver.py](icmp_basic_reveiver.py) <br>
+[icmp_basic_reveiver.py](icmp_basic_receiver.py) <br>
 ### b - file
 [icmp_basic_file.py](icmp_file_exfiltr.py) <br>
-[icmp_basic_file.py](icmp_file_reveiver.py) <br>
+[icmp_basic_file.py](icmp_file_receiver.py) <br>
 [file_exfiltration.pcapng](file_exfiltration.pcapng) <br>
 
 ## 6 - STP
