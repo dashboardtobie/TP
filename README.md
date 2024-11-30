@@ -80,5 +80,89 @@ PC6> ping 10.2.1.52
 
 ## II - ATTAQUES
 ### 1 - premiers pas (premiers scripts)
-[ping.py](ping.py)
-[tcp_cap.py](tcp_cap.py)
+[ping.py](ping.py) <br>
+[tcp_cap.py](tcp_cap.py) <br>
+[dns_cap.py](dns_cap.py) <br>
+[dns_cap.py](dns_cap.py) <br>
+
+### 2 - DHCP
+#### a - DHCP Spoofing
+[dhcp_spoof.pcapnp](dhcp_spoof.pcapnp) <br>
+Résultats :
+Sans le serveur Rocky
+```bash
+PC3> ip dhcp
+DORA IP 10.2.1.230/24 GW 10.2.1.254
+```
+Avec Rocky
+```bash
+PC5> ip dhcp
+DDORA IP 10.2.1.226/24 GW 10.2.1.254
+```
+
+#### b - DHCP Starvation
+[dhcp_starvation.py](dhcp_starvation.py) <br>
+[dhcp_starvation.pcapng](dhcp_starvation.pcapng)
+
+résultats :
+```bash
+PC3> ip dhcp
+DDD
+Can't find dhcp server
+```
+### 3 - ARP
+#### a - ARP Poisonning
+[arp_poisonning.py](arp_poisonning.py)
+##### b - ARP Spoofing
+[arp_spoofing.py](arp_spoofing.py)
+[arp_spoofing.pcapng](arp_spoofing.pcapng)
+
+### c - MITM
+[arp_mitm.py](arp_mitm.py)
+[arp_mitm.pcapng](arp_mitm.pcapng)
+
+## 4 - DNS
+[dns_spoof.py](dns_spoof.py)
+[dns_spoof.pcapng](dns_spoof.pcapng)
+
+## 5 - Exfiltration ICMP
+### a - basic
+[icmp_basic_exfiltr.py](icmp_basic_exfiltr.py)
+[icmp_basic_reveiver.py](icmp_basic_reveiver.py)
+### b - file
+[icmp_basic_file.py](icmp_file_exfiltr.py)
+[icmp_basic_file.py](icmp_file_reveiver.py)
+[file_exfiltration.pcapng](file_exfiltration.pcapng)
+
+6 - STP
+[stp_rb.py](stp_rb.py)
+[stp_rb.pcapng](stp_rb.pcapng)
+
+Résultats :
+```bash
+IOU2#show spanning-tree
+
+VLAN0001
+  Spanning tree enabled protocol ieee
+  Root ID    Priority    1
+             Address     000c.29d8.10be
+             Cost        100
+             Port        2 (Ethernet0/1)
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    32769  (priority 32768 sys-id-ext 1)
+             Address     aabb.cc00.0200
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time  300 sec
+
+Interface           Role Sts Cost      Prio.Nbr Type
+------------------- ---- --- --------- -------- --------------------------------
+Et0/0               Desg FWD 100       128.1    P2p
+Et0/1               Root FWD 100       128.2    P2p
+Et0/2               Desg FWD 100       128.3    P2p
+Et0/3               Desg FWD 100       128.4    P2p
+Et1/0               Desg FWD 100       128.5    P2p
+Et1/1               Desg FWD 100       128.6    P2p
+Et1/2               Desg FWD 100       128.7    P2p
+ --More--
+```
