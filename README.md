@@ -175,3 +175,58 @@ Et1/1               Desg FWD 100       128.6    P2p
 Et1/2               Desg FWD 100       128.7    P2p
  --More--
 ```
+
+## III - REMEDIATIONS
+
+### 1 - DHCP Spoofing
+#### a. Activer le DHCP Snooping
+Le DHCP Snooping est une fonctionnalité disponible sur la plupart des switches managés. Il fonctionne en surveillant les paquets DHCP et en permettant uniquement les réponses DHCP provenant de ports approuvés (trusted).
+
+##### Configuration :
+- Configurez les ports connectés à des serveurs DHCP comme approuvés.
+- Configurez les autres ports (ceux connectés à des clients ou inconnus) comme non-approuvés.
+- Filtrez les paquets DHCP qui ne respectent pas cette règle. Par exemple les ports non approuvés ne pourront pas emettre de DHCP Offer et Ack.
+
+### 2 - ARP
+#### a -  Activer la protection dynamique contre l'ARP (Dynamic ARP Inspection - DAI)
+La fonctionnalité Dynamic ARP Inspection sur les switches réseau permet de valider les requêtes et réponses ARP en comparant les adresses MAC et IP aux entrées autorisées (via le DHCP Snooping).
+
+##### Fonctionnement :
+- Filtrage des paquets ARP.
+- Validation des associations IP-MAC à partir de la base de données DHCP Snooping.
+
+#### b - Port security
+Port Security est une fonctionnalité des switches Cisco permettant de limiter l'accès réseau à un port en restreignant les adresses MAC autorisées. Cela améliore la sécurité en empêchant les appareils non autorisés de se connecter.
+
+##### Modes de fonctionnement :
+- Adresses MAC statiques : configurées manuellement et fixées dans la table d'adresses.
+- Adresses MAC dynamiques : apprises automatiquement mais perdues après un redémarrage du switch.
+- Adresses MAC sticky : apprises automatiquement et sauvegardées dans la configuration active, conservées après un redémarrage.
+
+##### Actions en cas de dépassement de la limite d'adresses autorisées :
+- Protect : bloque les paquets non autorisés sans notification.
+- Restrict : bloque les paquets non autorisés et envoie une alerte.
+- Shutdown : désactive immédiatement le port et envoie une alerte.
+Port Security offre ainsi une protection efficace contre les connexions malveillantes ou accidentelles au réseau.
+
+### 3 - DNS Spoofing
+#### Chiffrer le trafic DNS avec DoH ou DoT
+DNS over HTTPS (DoH) et DNS over TLS (DoT) chiffrent les requêtes DNS, rendant plus difficile l'interception et l'altération des requêtes.
+
+### 4 - Exfiltration ICMP
+#### DPI (Deep Packet Inspection)
+Deep Packet Inspection (DPI) est une technologie de surveillance et d'analyse du trafic réseau qui permet d'examiner l'intégralité du contenu des paquets de données circulant sur un réseau, plutôt que de se limiter à des informations de base comme l'adresse IP source ou destination (qui sont analysées dans les techniques de filtrage classiques, comme le filtrage de paquets). DPI analyse la paye-load des paquets (le contenu) et peut examiner chaque octet de données pour en tirer des informations précises.
+
+##### Fonctionnement de DPI :
+- Examen des paquets : DPI inspecte chaque paquet dans le flux réseau, analysant à la fois l'en-tête et la charge utile (données) du paquet.
+
+- Identification de protocoles : DPI peut identifier des protocoles spécifiques et des applications  en analysant le contenu des paquets et les correspondances avec des signatures ou des modèles de trafic connus.
+
+- Filtrage et bloquage : En fonction des politiques de sécurité, DPI peut bloquer certains types de contenu ou de communications en inspectant et en analysant le contenu des paquets.
+
+### 5 - STP
+BPDU Guard (Bridge Protocol Data Unit Guard) est une fonctionnalité de sécurité utilisée dans les réseaux Ethernet, spécifiquement sur les commutateurs Cisco, pour protéger le réseau contre les attaques de type Spanning Tree Protocol (STP), en empêchant l'injection de BPDUs malveillants dans un réseau.
+
+##### Fonctionnement du BPDU Guard :
+- Lorsqu'un commutateur reçoit un BPDU sur un port où BPDU Guard est activé, le port est immédiatement désactivé (mis en état errdisable). Cela empêche ce port de participer à la mise à jour du Spanning Tree et protège ainsi contre des modifications non autorisées du rôle de Bridge.
+- BPDU Guard est souvent activé sur des ports où les BPDUs ne sont pas attendus, comme les ports d'accès connectés à des hôtes (ordinateurs, imprimantes, etc.) ou des périphériques finaux. Ces hôtes ne devraient pas émettre de BPDUs.
