@@ -118,8 +118,8 @@ Can't find dhcp server
 #### a - ARP Poisonning
 [arp_poisonning.py](arp_poisonning.py) <br>
 ##### b - ARP Spoofing
-[arp_spoofing.py](arp_spoofing.py) <br>
-[arp_spoofing.pcapng](arp_spoofing.pcapng) <br>
+[arp_spoofing.py](arp_spoof.py) <br>
+[arp_spoofing.pcapng](arp_spoof.pcapng) <br>
 
 ### c - MITM
 [arp_mitm.py](arp_mitm.py) <br>
