@@ -183,9 +183,25 @@ Et1/2               Desg FWD 100       128.7    P2p
 Le DHCP Snooping est une fonctionnalité disponible sur la plupart des switches managés. Il fonctionne en surveillant les paquets DHCP et en permettant uniquement les réponses DHCP provenant de ports approuvés (trusted).
 
 ##### Configuration :
-- Configurez les ports connectés à des serveurs DHCP comme approuvés.
-- Configurez les autres ports (ceux connectés à des clients ou inconnus) comme non-approuvés.
-- Filtrez les paquets DHCP qui ne respectent pas cette règle. Par exemple les ports non approuvés ne pourront pas emettre de DHCP Offer et Ack.
+Activer DHCP Snooping globalement :
+```bash
+switch# configure terminal
+switch(config)# ip dhcp snooping
+```
+Définir les VLANs surveillés :
+```bash
+switch(config)# ip dhcp snooping vlan <VLAN-ID>
+```
+Configurer les ports approuvés et non-approuvés :
+```bash
+switch(config)# interface <interface-ID>
+switch(config-if)# ip dhcp snooping trust
+```
+Par défaut, les ports sont non-approuvés, donc aucune configuration supplémentaire n’est nécessaire.
+Limiter les taux de paquets DHCP sur les ports non-approuvés :
+```bash
+switch(config-if)# ip dhcp snooping limit rate <nombre-de-paquets-par-seconde>
+```
 
 ### 2 - ARP
 #### a -  Activer la protection dynamique contre l'ARP (Dynamic ARP Inspection - DAI)
@@ -194,6 +210,25 @@ La fonctionnalité Dynamic ARP Inspection sur les switches réseau permet de val
 ##### Fonctionnement :
 - Filtrage des paquets ARP.
 - Validation des associations IP-MAC à partir de la base de données DHCP Snooping.
+
+##### Configuration
+Activer DAI sur les VLANs surveillés :
+```bash
+switch(config)# ip arp inspection vlan <VLAN-ID>
+```
+S'assurer que DHCP Snooping est activé pour les VLANs (DAI utilise la base de données DHCP) :
+```bash
+switch(config)# show ip dhcp snooping
+```
+Configurer les ports approuvés et non-approuvés pour DAI 
+```bash
+switch(config)# interface <interface-ID>
+switch(config-if)# ip arp inspection trust
+```
+Configurer un taux limite pour les paquets ARP sur les ports non-approuvés :
+```bash
+switch(config-if)# ip arp inspection limit rate <taux>
+```
 
 #### b - Port security
 Port Security est une fonctionnalité des switches Cisco permettant de limiter l'accès réseau à un port en restreignant les adresses MAC autorisées. Cela améliore la sécurité en empêchant les appareils non autorisés de se connecter.
@@ -209,9 +244,84 @@ Port Security est une fonctionnalité des switches Cisco permettant de limiter l
 - Shutdown : désactive immédiatement le port et envoie une alerte.
 Port Security offre ainsi une protection efficace contre les connexions malveillantes ou accidentelles au réseau.
 
+##### Configuration
+Étape 1 : Accéder au port à configurer
+Commencez par accéder à l’interface du port à sécuriser.
+```bash
+switch# configure terminal
+switch(config)# interface <interface-ID>
+```
+Étape 2 : Activer Port Security
+Activez la fonctionnalité Port Security sur l’interface.
+```bash
+switch(config-if)# switchport port-security
+```
+Étape 3 : Configurer le nombre maximal d’adresses MAC autorisées
+Définissez combien d’appareils (adresses MAC) peuvent être connectés au port.
+```bash
+switch(config-if)# switchport port-security maximum <nombre>
+```
+Étape 4 : Définir les adresses MAC autorisées
+Vous pouvez spécifier les adresses MAC manuellement ou laisser le switch les apprendre dynamiquement.
+
+Adresses MAC statiques (définies manuellement) :
+```bash
+switch(config-if)# switchport port-security mac-address <adresse-MAC>
+```
+Adresses MAC dynamiques (apprises automatiquement) :
+Par défaut, les adresses MAC apprises dynamiquement ne sont pas sauvegardées après un redémarrage du switch.
+
+Adresses MAC sticky (dynamiques mais conservées après un redémarrage) :
+```bash
+switch(config-if)# switchport port-security mac-address sticky
+```
+Étape 5 : Configurer une action en cas de violation
+Définissez ce que le switch doit faire si un appareil non autorisé tente de se connecter.
+
+Mode Protect : Bloque les paquets des adresses MAC non autorisées sans alerte.
+```bash
+switch(config-if)# switchport port-security violation protect
+```
+Mode Restrict : Bloque les paquets des adresses non autorisées et envoie une alerte.
+```bash
+switch(config-if)# switchport port-security violation restrict
+```
+Mode Shutdown (par défaut) : Désactive immédiatement le port (état errdisable) et envoie une alerte.
+```bash
+switch(config-if)# switchport port-security violation shutdown
+```
+Étape 6 : Vérifier la configuration
+Utilisez les commandes suivantes pour vérifier les paramètres configurés et l’état du port.
+```bash
+switch# show port-security interface <interface-ID>
+switch# show port-security address
+```
+Étape 7 : Réactiver un port en état errdisable
+Si un port est désactivé à cause d’une violation, réactivez-le manuellement :
+```bash
+switch# configure terminal
+switch(config)# interface <interface-ID>
+switch(config-if)# shutdown
+switch(config-if)# no shutdown
+```
+
+
 ### 3 - DNS Spoofing
 #### Chiffrer le trafic DNS avec DoH ou DoT
 DNS over HTTPS (DoH) et DNS over TLS (DoT) chiffrent les requêtes DNS, rendant plus difficile l'interception et l'altération des requêtes.
+
+##### Configuration
+Configurer un serveur DNS prenant en charge DoH ou DoT :
+Exemples : Google DNS (8.8.8.8), Cloudflare (1.1.1.1).
+Sur les machines clientes (Windows) :
+Activer DoH :
+```powershell
+Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses "8.8.8.8"
+Set-DnsClientGlobalSetting -EnableAutoDnsServer $true
+```
+Sur les serveurs ou les firewalls (pfSense, Cisco Umbrella) :
+Configurer les règles DNS pour ne permettre que le trafic DoH/DoT et bloquer le DNS non chiffré.
+
 
 ### 4 - Exfiltration ICMP
 #### DPI (Deep Packet Inspection)
@@ -224,9 +334,40 @@ Deep Packet Inspection (DPI) est une technologie de surveillance et d'analyse du
 
 - Filtrage et bloquage : En fonction des politiques de sécurité, DPI peut bloquer certains types de contenu ou de communications en inspectant et en analysant le contenu des paquets.
 
+##### Configuration
+- Activer DPI sur un firewall ou une appliance réseau (ex : Cisco Firepower, Palo Alto, pfSense)
+```bash
+firepower# configure terminal
+firepower(config)# class-map type inspect icmp match-all icmp-traffic
+firepower(config-cmap)# match protocol icmp
+```
+- Configurer des politiques de filtrage pour ICMP suspect :
+```bash
+firepower(config)# policy-map type inspect icmp icmp-policy
+firepower(config-pmap)# class type inspect icmp icmp-traffic
+firepower(config-pmap-c)# set connection timeout icmp 2
+```
+
+
 ### 5 - STP
 BPDU Guard (Bridge Protocol Data Unit Guard) est une fonctionnalité de sécurité utilisée dans les réseaux Ethernet, spécifiquement sur les commutateurs Cisco, pour protéger le réseau contre les attaques de type Spanning Tree Protocol (STP), en empêchant l'injection de BPDUs malveillants dans un réseau.
 
 ##### Fonctionnement du BPDU Guard :
 - Lorsqu'un commutateur reçoit un BPDU sur un port où BPDU Guard est activé, le port est immédiatement désactivé (mis en état errdisable). Cela empêche ce port de participer à la mise à jour du Spanning Tree et protège ainsi contre des modifications non autorisées du rôle de Bridge.
 - BPDU Guard est souvent activé sur des ports où les BPDUs ne sont pas attendus, comme les ports d'accès connectés à des hôtes (ordinateurs, imprimantes, etc.) ou des périphériques finaux. Ces hôtes ne devraient pas émettre de BPDUs.
+
+##### Configuration
+- Activer BPDU Guard globalement :
+```bash
+switch# configure terminal
+switch(config)# spanning-tree portfast bpduguard default
+```
+- Activer BPDU Guard par port :
+```bash
+switch(config)# interface <interface-ID>
+switch(config-if)# spanning-tree bpduguard enable
+```
+- Vérifier l’état des ports protégés :
+```bash
+switch# show spanning-tree interface <interface-ID> detail
+```
