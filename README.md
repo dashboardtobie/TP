@@ -117,11 +117,11 @@ Can't find dhcp server
 ### 3 - ARP
 #### a - ARP Poisonning
 [arp_poisonning.py](arp_poisonning.py) <br>
-##### b - ARP Spoofing
+#### b - ARP Spoofing
 [arp_spoofing.py](arp_spoof.py) <br>
 [arp_spoofing.pcapng](arp_spoof.pcapng) <br>
 
-### c - MITM
+#### c - MITM
 [arp_mitm.py](arp_mitm.py) <br>
 [arp_mitm.pcapng](arp_mitm.pcapng) <br>
 
