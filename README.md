@@ -178,8 +178,8 @@ Et1/2               Desg FWD 100       128.7    P2p
 
 ## III - REMEDIATIONS
 
-### 1 - DHCP Spoofing
-#### a. Activer le DHCP Snooping
+### 1 - DHCP
+#### Activer le DHCP Snooping
 Le DHCP Snooping est une fonctionnalité disponible sur la plupart des switches managés. Il fonctionne en surveillant les paquets DHCP et en permettant uniquement les réponses DHCP provenant de ports approuvés (trusted).
 
 ##### Configuration :
