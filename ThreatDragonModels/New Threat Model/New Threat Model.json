@@ -2,7 +2,7 @@
   "version": "2.4.1",
   "summary": {
     "title": "New Threat Model",
-    "owner": "Tobie Datchoua",
+    "owner": "",
     "description": "",
     "id": 0
   },
@@ -668,7 +668,7 @@
             "connector": "smooth",
             "data": {
               "type": "tm.Flow",
-              "name": "Data Flow",
+              "name": "Requête SQL",
               "description": "",
               "outOfScope": false,
               "isTrustBoundary": false,
@@ -681,7 +681,7 @@
               "threats": []
             },
             "labels": [
-              "Data Flow"
+              "Requête SQL"
             ],
             "id": "2c8f9c97-1ee7-465a-b392-e0bf46f23ca6",
             "source": {
@@ -691,6 +691,16 @@
             "target": {
               "cell": "6520d1bc-f97c-45d2-a2cd-9bfd5be92986",
               "port": "45a7a196-7aca-4459-9d8e-bd3657218b76"
+            },
+            "tools": {
+              "items": [
+                "boundary",
+                "button-remove",
+                "vertices",
+                "source-arrowhead",
+                "target-arrowhead"
+              ],
+              "name": null
             }
           },
           {
